@@ -1,0 +1,3 @@
+config { type: "table" }
+SELECT "budget" as table,category, commodity,contractor,day as date, null as cumulative FROM 
+${ref("actual")}

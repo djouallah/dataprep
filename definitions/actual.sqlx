@@ -1,0 +1,70 @@
+config { type: "view" }
+with xx as (
+  select
+    distinct category,
+    commodity,
+    contractor,
+    day
+  FROM
+    `testing-bi-engine.starschema.actual`
+    cross join (
+      SELECT
+        day
+      FROM
+        UNNEST(
+          GENERATE_DATE_ARRAY(
+            DATE('2019-01-01'),
+            DATE('2019-12-31'),
+            INTERVAL 1 DAY
+          )
+        ) AS day
+    ) d
+),
+tt as (
+  select
+    *
+  FROM
+    `testing-bi-engine.starschema.actual`
+),
+mm as (
+  select
+    xx.category,
+    xx.commodity,
+    xx.contractor,
+    day,
+    actualhours
+  from
+    xx
+    left join tt on xx.day = tt.date
+    and xx.category = tt.category
+    and xx.commodity = tt.commodity
+    and xx.contractor = tt.contractor
+  order by
+    day
+),
+ff as (
+  SELECT
+    category,
+    commodity,
+    contractor,
+    day,
+    sum(actualhours) as actualhours
+  FROM
+    mm
+  group by
+    1,
+    2,
+    3,
+    4
+)
+SELECT
+  *,
+  sum(actualhours) OVER(
+    PARTITION BY category,
+    commodity,
+    contractor
+    ORDER BY
+      day
+  ) cumulative_sum
+FROM
+  ff
