@@ -1,3 +1,4 @@
-config { type: "table" }
+config { type: "table",
+schema: "Reporting" }
 SELECT "budget" as table,category, commodity,contractor,day as date, null as cumulative FROM 
 ${ref("stg_actual")}
