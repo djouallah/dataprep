@@ -2,5 +2,6 @@
     "warehouse": "bigquery",
     "defaultSchema": "dataform",
     "assertionSchema": "dataform_assertions",
-    "gcloudProjectId": "testing-bi-engine"
+    "gcloudProjectId": "testing-bi-engine",
+    "useRunCache": true
 }
