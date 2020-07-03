@@ -6,7 +6,7 @@ with xx as (
     contractor,
     day
   FROM
-    `testing-bi-engine.starschema.actual`
+    ${ref("actual")}
     cross join (
       SELECT
         day
@@ -24,7 +24,7 @@ tt as (
   select
     *
   FROM
-    `testing-bi-engine.starschema.actual`
+    ${ref("actual")}
 ),
 mm as (
   select

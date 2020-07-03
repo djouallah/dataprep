@@ -1,0 +1,7 @@
+config {
+  type: "declaration",
+  schema: "starschema",
+  name: "actual",
+  tags: ["source"],
+  description: "Raw Actual Data"
+}
