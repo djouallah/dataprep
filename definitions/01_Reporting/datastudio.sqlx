@@ -1,4 +1,12 @@
 config { type: "table",
 schema: "Reporting" }
-SELECT "budget" as table,category, commodity,contractor,day as date, null as cumulative FROM 
-${ref("stg_actual")}
+with tt as (SELECT "budget" as table,id,category, commodity,contractor,day as date, budgethours as metric,null as cumulative FROM ${ref("stg_budget")}
+UNION ALL
+SELECT "actual" as table,1 as id,category, commodity,contractor,day as date, actualhours as metric, cumulative_sum as cumulative FROM ${ref("stg_actual")}
+
+UNION ALL
+SELECT "baseline" as table,1 as id,category, commodity,null as contractor,day as date, forecast as metric,forecast_cumulative as cumulative FROM ${ref("stg_baseline")}
+
+UNION ALL
+SELECT "spent" as table,1 as id,category, null as commodity,null as contractor,day as date, spent as metric,cumulative_sum as cumulative FROM ${ref("stg_spent")})
+select *except(metric,cumulative),(case when table ="budget" then metric else null end) as budget, (case when table ="spent" then metric else null end) as spent ,(case when table ="baseline" then metric else null end) as forecast, (case when table ="actual" then metric else null end) as actual ,(case when table ="actual" then cumulative else null end) as actual_cumulative,(case when table ="baseline" then cumulative else null end) as forecast_cumulative,(case when table ="spent" then cumulative else null end) as spent_cumulative,DATEtime(CURRENT_TIMESTAMP(), "Australia/Brisbane") as now from tt order by date asc

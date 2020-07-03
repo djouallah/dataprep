@@ -1,0 +1,12 @@
+config { type: "view" }
+SELECT
+  ROW_NUMBER() OVER() AS id,d.day,category	,commodity,contractor,budgethours
+  
+FROM
+   ${ref("budget")}
+CROSS JOIN (
+  SELECT
+    day
+  FROM
+    UNNEST( GENERATE_DATE_ARRAY(DATE('2019-01-01'), DATE('2019-12-31'), INTERVAL 1 DAY) ) AS day) d
+ 

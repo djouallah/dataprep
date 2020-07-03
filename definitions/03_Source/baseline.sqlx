@@ -1,0 +1,7 @@
+config {
+  type: "declaration",
+  schema: "starschema",
+  name: "baseline",
+  tags: ["source"],
+  description: "Raw baseline Data"
+}
